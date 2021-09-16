@@ -7,6 +7,7 @@
 - **store** current fs state to named snapshot.
 - **restore** current fs state from named snapshot.
 - **merge** named snapshot to current fs state.
+- **list** all named snapshots.
 
 ## Usage
 

@@ -7,6 +7,7 @@ import {
 	mkdirSync as mkdir,
 	copyFileSync as copy,
 	constants as fs,
+	readdirSync as dir,
 } from 'fs'
 import { resolve } from 'path'
 import { createInterface } from 'readline'
@@ -24,6 +25,7 @@ function execute( script: tree.$mol_tree2 ) {
 			case 'store': return store( command.kids[0].type )
 			case 'restore': return restore( command.kids[0].type )
 			case 'merge': return merge( command.kids[0].type )
+			case 'list': return list()
 			
 			default: throw command.error( 'Unsupported command' )
 			
@@ -95,6 +97,16 @@ function merge( name: string ) {
 		
 	}
 	
+}
+
+function list() {
+	
+	const response = tree.$mol_tree2.list(
+		dir( '.bz/snapshot' ).map( path => tree.$mol_tree2.data( path ) )
+	)
+	
+	process.stdout.write( response.toString() )
+
 }
 
 function load( path: string ) {
