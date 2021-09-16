@@ -2,6 +2,8 @@
 
 [CROWD](https://github.com/hyoo-ru/crowd.hyoo.ru)-based conflict-free version control system.
 
+![](logo.svg)
+
 ## Actions
 
 - **store** current fs state to named snapshot.
