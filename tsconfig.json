@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "ESNext",
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "inlineSources": true,
+		"types" : ["node"]
+    },
+	"exclude": [
+		"**/node_modules",
+		"**/.*/",
+		"**/-/*"
+	],
+	"atom": {
+		"rewriteTsconfig": false
+	},
+	"compileOnSave": true
+}

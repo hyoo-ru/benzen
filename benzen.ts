@@ -34,8 +34,8 @@ function file( path: string ) {
 		'xml': {
 			read: node => {
 				const text = read( path, { encoding: 'utf-8' } )
-				const dom = crowd.$mol_dom_parse( text, 'text/xml' )
-				node.dom( dom )
+				const doc = crowd.$mol_dom_parse( text, 'text/xml' )
+				node.dom( doc.documentElement )
 			},
 			write: node => {
 				const dom = node.dom()
