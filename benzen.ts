@@ -9,10 +9,45 @@ import {
 	constants as fs,
 	readdirSync as dir,
 } from 'fs'
-import { resolve } from 'path'
+import { resolve, extname } from 'path'
 import { createInterface } from 'readline'
 import { default as crowd } from 'hyoo_crowd_lib'
 import { default as tree } from 'mol_tree2'
+
+function file( path: string ) {
+
+	const types: Record< string, {
+		read: ( node: crowd.$hyoo_crowd_node )=> void
+		write: ( node: crowd.$hyoo_crowd_node )=> void
+	} > = {
+		'txt': {
+			read: node => {
+				const text = read( path, { encoding: 'utf-8' } )
+				node.text( text )
+			},
+			write: node => {
+				const text = node.text()
+				mkdir( resolve( path, '..' ), { recursive: true } )
+				write( path, text )
+			},
+		},
+		'xml': {
+			read: node => {
+				const text = read( path, { encoding: 'utf-8' } )
+				const dom = crowd.$mol_dom_parse( text, 'text/xml' )
+				node.dom( dom )
+			},
+			write: node => {
+				const dom = node.dom()
+				const xml = crowd.$mol_dom_serialize( dom )
+				mkdir( resolve( path, '..' ), { recursive: true } )
+				write( path, xml )
+			},
+		},
+	}
+
+	return types[ extname( path ).replace( /^\./, '' ) ] ?? types[ 'txt' ]
+}
 
 const docs = new Map< string, crowd.$hyoo_crowd_doc >()
 
@@ -66,10 +101,7 @@ function restore( name: string ) {
 		let doc = load( target )
 		docs.set( path, doc )
 		
-		const content = doc.root.sub( 'content' ).text()
-		
-		mkdir( resolve( path, '..' ), { recursive: true } )
-		write( path, content )
+		file( path ).write( doc.root.sub( 'content' ) )
 		
 	}
 	
@@ -91,9 +123,7 @@ function merge( name: string ) {
 		doc.apply( delta )
 		save( target, delta )
 		
-		const content = doc.root.sub( 'content' ).text()
-		mkdir( resolve( path, '..' ), { recursive: true } )
-		write( path, content )
+		file( path ).write( doc.root.sub( 'content' ) )
 		
 	}
 	
@@ -219,8 +249,7 @@ watcher
 	
 	const from = new crowd.$hyoo_crowd_clock( doc.clock )
 	
-	const content = read( path, { encoding: 'utf-8' } )
-	doc.root.sub( 'content' ).text( content )
+	file( path ).read( doc.root.sub( 'content' ) )
 	
 	const delta = doc.delta( from )
 	save( path_inner, delta )

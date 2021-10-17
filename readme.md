@@ -13,4 +13,9 @@
 
 ## Usage
 
+```
+cd test
+ts-node ../benzen
+```
+
 - [Video of Store/Restore/Merge](https://youtu.be/YXyaGe4N9oA)
